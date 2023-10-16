@@ -35,6 +35,11 @@ dependencies {
 	runtimeOnly("com.mysql:mysql-connector-j")
 	annotationProcessor("org.projectlombok:lombok")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+	implementation("io.kotest:kotest-property-jvm:5.6.1")
+	testImplementation("io.kotest:kotest-runner-junit5-jvm:5.6.1")
+	testImplementation("io.kotest:kotest-assertions-core-jvm:5.6.1")
+	implementation("io.kotest.extensions:kotest-extensions-spring:1.1.2")
 }
 
 tasks.withType<KotlinCompile> {
