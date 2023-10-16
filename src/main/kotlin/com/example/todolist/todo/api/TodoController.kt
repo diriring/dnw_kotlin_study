@@ -72,12 +72,32 @@ class TodoController(val todoService: TodoService) {
     }
 
     @PostMapping("/recommend")
-    fun recommendTodo(@RequestBody @Validated recommendTodoRequest: TodoRequest.RecommendTodoRequest) {
+    fun recommendTodo(@RequestBody @Validated recommendTodoRequest: TodoRequest.RecommendTodoRequest): CommonResponse<TodoResponse.PublicTodoResponse> {
         logger.info("date : {}", recommendTodoRequest.date)
         logger.info("startTime : {}", recommendTodoRequest.startTime)
         logger.info("endTime : {}", recommendTodoRequest.endTime)
 
-        todoService.recommendTodo(recommendTodoRequest)
+        val response = todoService.callApi(recommendTodoRequest)
+
+        logger.info("statusCode : {}", response.statusCode)
+        logger.info("body : {}", response.body)
+
+        val uploadTodoRequest = response.body?.let {
+            TodoRequest.UploadTodoRequest(
+                recommendTodoRequest.date,
+                recommendTodoRequest.startTime,
+                recommendTodoRequest.endTime,
+                "추천 할일",
+                it.activity,
+                0
+            )
+        }
+
+        checkNotNull(uploadTodoRequest) {
+            "api 호출 실패"
+        }
+        val todoResponse = todoService.upload(uploadTodoRequest!!)
+        return CommonResponse.success(todoResponse, "todo 등록 성공")
     }
 
 }

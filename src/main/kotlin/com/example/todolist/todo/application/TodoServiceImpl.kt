@@ -1,10 +1,13 @@
 package com.example.todolist.todo.application
 
 import com.example.todolist.todo.domain.Todo
+import com.example.todolist.todo.dto.ApiResponse
 import com.example.todolist.todo.dto.TodoRequest
 import com.example.todolist.todo.dto.TodoResponse
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.client.RestTemplate
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -120,8 +123,11 @@ class TodoServiceImpl(val todoDao: TodoDao): TodoService {
         return result
     }
 
-    override fun recommendTodo(recommendTodoRequest: TodoRequest.RecommendTodoRequest) {
+    override fun callApi(recommendTodoRequest: TodoRequest.RecommendTodoRequest): ResponseEntity<ApiResponse> {
+        val url = "http://www.boredapi.com/api/activity/"
+        val restTemplate = RestTemplate()
 
+        return restTemplate.getForEntity(url, ApiResponse::class.java)
     }
 
 }
